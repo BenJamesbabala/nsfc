@@ -65,7 +65,7 @@ def show_codes(types, pager):
 @click.option('-p', '--projects', help='资助类别(代码)')
 @click.option('-o', '--outfile', help='输出文件名前缀', default='nsfc', show_default=True)
 @click.option('-O', '--outtype', help='输出文件格式', default='xlsx', show_default=True, type=click.Choice('html xlsx tsv txt json jl pkl all'.split()))
-@click.option('-t', '--type', help='查询类型：Z - 资助项目，J - 结题项目', type=click.Choice('ZJ'), default='Z', show_default=True)
+@click.option('-t', '--type', help='查询类型：Z - 资助项目(已不支持)，J - 结题项目', type=click.Choice('ZJ'), default='J', show_default=True)
 def search(**kwargs):
     nsfc = NSFC()
 
@@ -83,7 +83,8 @@ def search(**kwargs):
                 nsfc.logger.debug(
                     '>>> crawling: {} - {} - {}'.format(code, year, project))
                 if kwargs['type'] == 'Z':
-                    result = nsfc.funding_query(code=code, ratifyYear=year, projectType=project)
+                    nsfc.logger.warning('目前网站已不支持资助项目检索！')
+                    # result = nsfc.funding_query(code=code, ratifyYear=year, projectType=project)
                 else:
                     result = nsfc.project_query(code=code, conclusionYear=year, projectType=project)
                 out_data += [context for context in nsfc.format_context(result)]

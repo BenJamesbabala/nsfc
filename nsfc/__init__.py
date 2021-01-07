@@ -166,7 +166,7 @@ class NSFC(object):
 
                 conclusion_context = {}
                 if context['是否结题'] == 'true':
-                    conclusion_context = self.conclusion_project(context['批准号'])
+                    conclusion_context = self.conclusion_project(row[0])
 
                 context['中文摘要'] = conclusion_context.get('projectAbstractC', '')
                 context['英文摘要'] = conclusion_context.get('projectAbstractE', '')
