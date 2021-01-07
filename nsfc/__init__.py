@@ -4,6 +4,7 @@
     国家自然科学基金查询系统
 """
 import os
+import re
 import sys
 import json
 
@@ -154,7 +155,7 @@ class NSFC(object):
         """
             查询结果转成字典
         """
-        header = '项目名称 批准号 项目类别 依托单位 项目负责人 资助经费(万元) 批准年度 关键词 是否结题 研究成果(期刊论文;会议论文;著作;奖励;专利) 依托单位ID 项目负责人ID 项目类别代码 申请代码 起止年月'.split()
+        header = '项目名称 批准号 项目类别 依托单位 项目负责人 资助经费(万元) 批准年度 关键词 是否结题 研究成果(期刊论文;会议论文;著作;奖励;专利) 依托单位ID 项目负责人ID 项目类别代码 申请代码 研究期限'.split()
 
         for data in query_result:
             for row in data['data']['resultsData']:
@@ -174,6 +175,12 @@ class NSFC(object):
                 context['依托单位ID'] = conclusion_context.get('dependUintID', '')
                 context['项目负责人ID'] = conclusion_context.get('projectAdminID', '')
                 context['负责人职称'] = conclusion_context.get('adminPosition', '')
+
+                researchTimeScope = conclusion_context.get('researchTimeScope', '')
+                if researchTimeScope:
+                    res = re.findall(r'(\d{4}-\d{2}-\d{2})', researchTimeScope)
+                    researchTimeScope = ' - '.join(res)
+                context['研究期限'] = researchTimeScope
 
                 context['是否结题'] = '是' if context['是否结题'] == 'true' else '否'
 
